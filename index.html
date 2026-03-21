@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flipbook.es — Crea tu librito animado</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f9f8f6; --surface: #ffffff; --surface2: #f2f1ee;
+      --border: #e2e0da; --border2: #ccc9c0;
+      --text: #1a1a18; --text2: #6b6a65; --text3: #a09f9a;
+      --accent: #1a1a18; --accent-fg: #ffffff;
+      --radius: 10px; --radius-lg: 14px;
+    }
+    body { font-family: 'Georgia', serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: baseline; gap: 12px; }
+    header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+    header span { font-size: 13px; color: var(--text2); }
+    main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem 3rem; }
+    .dropzone { border: 2px dashed var(--border2); border-radius: var(--radius-lg); padding: 3rem 1rem; text-align: center; cursor: pointer; transition: background 0.2s, border-color 0.2s; background: var(--surface); margin-bottom: 1.5rem; }
+    .dropzone:hover, .dropzone.over { background: var(--surface2); border-color: var(--text2); }
+    .dropzone-icon { font-size: 36px; margin-bottom: 10px; }
+    .dropzone h2 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+    .dropzone p { font-size: 13px; color: var(--text2); font-family: sans-serif; }
+    .section-label { font-family: sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text2); margin-bottom: 10px; }
+    .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .ctrl { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+    .ctrl label { font-family: sans-serif; font-size: 12px; color: var(--text2); display: block; margin-bottom: 8px; }
+    .ctrl input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+    .ctrl select { width: 100%; font-family: sans-serif; font-size: 14px; border: 1px solid var(--border2); border-radius: 6px; padding: 6px 8px; background: var(--bg); color: var(--text); cursor: pointer; }
+    .ctrl-val { font-size: 20px; font-weight: 700; margin-top: 4px; font-family: sans-serif; }
+    .frames-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .frames-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; margin-bottom: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; min-height: 110px; }
+    .frame-thumb { aspect-ratio: 3/4; border-radius: 5px; border: 1.5px solid var(--border); overflow: hidden; position: relative; background: var(--surface2); cursor: pointer; transition: border-color 0.15s; }
+    .frame-thumb:hover { border-color: var(--border2); }
+    .frame-thumb.active { border-color: var(--text); }
+    .frame-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .frame-num { position: absolute; bottom: 2px; right: 4px; font-family: sans-serif; font-size: 9px; color: #fff; background: rgba(0,0,0,0.45); padding: 1px 3px; border-radius: 3px; }
+    .frames-empty { grid-column: 1/-1; display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-size: 13px; color: var(--text3); padding: 2rem; }
+    .preview-area { display: grid; grid-template-columns: 140px 1fr; gap: 16px; margin-bottom: 1.5rem; align-items: start; }
+    .anim-col { display: flex; flex-direction: column; gap: 8px; }
+    .anim-label { font-family: sans-serif; font-size: 12px; color: var(--text2); }
+    .flip-preview { width: 140px; aspect-ratio: 3/4; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .flip-preview canvas { width: 100%; height: 100%; display: block; }
+    .play-row { display: flex; align-items: center; gap: 8px; }
+    .btn-play { font-family: sans-serif; font-size: 13px; background: var(--surface); border: 1px solid var(--border2); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: background 0.15s; }
+    .btn-play:hover { background: var(--surface2); }
+    .frame-counter { font-family: sans-serif; font-size: 12px; color: var(--text3); }
+    .sheet-col { display: flex; flex-direction: column; gap: 8px; }
+    .sheet-label { font-family: sans-serif; font-size: 12px; color: var(--text2); }
+    .sheet-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; display: flex; justify-content: center; }
+    #sheet { max-width: 100%; border: 1px solid var(--border); border-radius: 3px; }
+    .info-box { font-family: sans-serif; font-size: 13px; color: #5a4a00; background: #fffbe6; border: 1px solid #d4c24a; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 1rem; line-height: 1.6; display: none; }
+    .status-bar { font-family: sans-serif; font-size: 13px; color: var(--text2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 1.5rem; }
+    .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; display: none; }
+    .progress-fill { height: 100%; background: var(--text); transition: width 0.2s; border-radius: 2px; }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-primary { background: var(--accent); color: var(--accent-fg); border: none; border-radius: var(--radius); padding: 11px 24px; font-family: sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
+    .btn-primary:hover { opacity: 0.82; }
+    .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); padding: 11px 24px; font-family: sans-serif; font-size: 14px; cursor: pointer; transition: background 0.15s; }
+    .btn-secondary:hover { background: var(--surface2); }
+    .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+    @media (max-width: 600px) {
+      .controls { grid-template-columns: 1fr 1fr; }
+      .preview-area { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>flipbook.es</h1>
+  <span>Convierte GIFs y vídeos en libritos imprimibles</span>
+</header>
+<main>
+  <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+    <div class="dropzone-icon">🎬</div>
+    <h2>Sube un GIF o vídeo</h2>
+    <p>GIF · MP4 · WebM · MOV — arrastra aquí o haz clic para seleccionar</p>
+  </div>
+  <input type="file" id="fileInput" accept=".gif,.mp4,.webm,.mov" style="display:none">
+
+  <div class="section-label">Configuración</div>
+  <div class="controls">
+    <div class="ctrl">
+      <label>Frames por segundo (extracción)</label>
+      <input type="range" id="fps" min="1" max="24" value="8" step="1">
+      <div class="ctrl-val"><span id="fpsVal">8</span> fps</div>
+    </div>
+    <div class="ctrl">
+      <label>Flipbooks por hoja</label>
+      <select id="perSheet">
+        <option value="4">4 (2×2)</option>
+        <option value="6" selected>6 (2×3)</option>
+        <option value="8">8 (2×4)</option>
+        <option value="9">9 (3×3)</option>
+        <option value="12">12 (3×4)</option>
+      </select>
+    </div>
+    <div class="ctrl">
+      <label>Tamaño de papel</label>
+      <select id="paperSize">
+        <option value="a4">A4 (210×297mm)</option>
+        <option value="a5">A5 (148×210mm)</option>
+        <option value="letter">Carta (216×279mm)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="frames-header">
+    <div class="section-label" style="margin-bottom:0">Frames extraídos (<span id="frameCount">0</span>)</div>
+  </div>
+  <div class="frames-grid" id="framesGrid">
+    <div class="frames-empty">Carga un GIF o vídeo para ver los frames aquí</div>
+  </div>
+
+  <div class="section-label">Previsualización</div>
+  <div class="preview-area">
+    <div class="anim-col">
+      <div class="anim-label">Animación</div>
+      <div class="flip-preview"><canvas id="animCanvas" width="140" height="187"></canvas></div>
+      <div class="play-row">
+        <button class="btn-play" id="playBtn" onclick="togglePlay()">▶ Play</button>
+        <span class="frame-counter">frame <span id="curFrame">—</span></span>
+      </div>
+    </div>
+    <div class="sheet-col">
+      <div class="sheet-label">Hoja 1 de <span id="totalPages">—</span> — cada posición = un flipbook completo</div>
+      <div class="sheet-wrap"><canvas id="sheet" width="380" height="537"></canvas></div>
+    </div>
+  </div>
+
+  <div class="info-box" id="infoBox"></div>
+
+  <div class="status-bar" id="status">
+    Carga un archivo para comenzar.
+    <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" id="btnPDF" onclick="exportPDF()" disabled>⬇ Descargar PDF</button>
+    <button class="btn-secondary" id="btnSVG" onclick="exportSVG()" disabled>⬇ Descargar SVG (hoja 1)</button>
+  </div>
+</main>
+
+<script>
+let frames = [], playing = false, playInterval = null, curIdx = 0;
+
+const $ = id => document.getElementById(id);
+const fpsRange    = $('fps');
+const fpsVal      = $('fpsVal');
+const perSheet    = $('perSheet');
+const paperSize   = $('paperSize');
+const framesGrid  = $('framesGrid');
+const frameCount  = $('frameCount');
+const animCanvas  = $('animCanvas');
+const animCtx     = animCanvas.getContext('2d');
+const sheetCanvas = $('sheet');
+const sheetCtx    = sheetCanvas.getContext('2d');
+const totalPagesEl = $('totalPages');
+const infoBox     = $('infoBox');
+
+fpsRange.oninput = () => { fpsVal.textContent = fpsRange.value; };
+perSheet.onchange = () => { renderSheet(); updateInfo(); };
+paperSize.onchange = renderSheet;
+
+const dropzone = $('dropzone');
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('over'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
+dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('over'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+$('fileInput').onchange = e => { if (e.target.files[0]) handleFile(e.target.files[0]); };
+
+function setStatus(msg, pct) {
+  const bar = $('progressBar');
+  $('status').childNodes[0].textContent = msg;
+  if (pct !== undefined) { bar.style.display = 'block'; $('progressFill').style.width = pct + '%'; }
+  else bar.style.display = 'none';
+}
+
+function updateInfo() {
+  if (!frames.length) { infoBox.style.display = 'none'; return; }
+  const n = parseInt(perSheet.value);
+  const totalSheets = Math.ceil(frames.length / n);
+  infoBox.style.display = 'block';
+  infoBox.innerHTML =
+    `✂️ <strong>Cómo cortar:</strong> Imprime las <strong>${totalSheets} hojas</strong> y apílalas en orden (hoja 1 arriba). ` +
+    `Corta el taco entero de una vez por cada línea de separación. ` +
+    `Obtendrás <strong>${n} pilas</strong> — cada pila ya es un flipbook ordenado listo para grapar.`;
+}
+
+function handleFile(file) {
+  frames = [];
+  $('btnPDF').disabled = true; $('btnSVG').disabled = true;
+  infoBox.style.display = 'none';
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (ext === 'gif') loadGIF(file); else loadVideo(file);
+}
+
+function loadGIF(file) {
+  setStatus('Leyendo GIF…', 10);
+  const img = new Image();
+  img.onload = () => extractGIFFrames(img);
+  img.src = URL.createObjectURL(file);
+}
+
+function extractGIFFrames(img) {
+  const num = Math.min(80, Math.max(8, parseInt(fpsRange.value) * 3));
+  setStatus(`Generando ${num} frames del GIF…`, 20);
+  frames = [];
+  for (let i = 0; i < num; i++) {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth || 320; c.height = img.naturalHeight || 240;
+    c.getContext('2d').drawImage(img, 0, 0);
+    frames.push(c.toDataURL('image/jpeg', 0.85));
+  }
+  onFramesReady();
+}
+
+function loadVideo(file) {
+  setStatus('Cargando vídeo…', 5);
+  const video = document.createElement('video');
+  video.src = URL.createObjectURL(file); video.muted = true; video.preload = 'auto';
+  video.onloadedmetadata = () => extractVideoFrames(video);
+  video.onerror = () => setStatus('Error al cargar el vídeo.');
+  video.load();
+}
+
+async function extractVideoFrames(video) {
+  const fps = parseInt(fpsRange.value);
+  const total = Math.min(80, Math.max(8, Math.round(video.duration * fps)));
+  const step = video.duration / total;
+  frames = [];
+  const c = document.createElement('canvas');
+  c.width = video.videoWidth || 320; c.height = video.videoHeight || 240;
+  const ctx = c.getContext('2d');
+  for (let i = 0; i < total; i++) {
+    await new Promise(res => { video.currentTime = i * step; video.addEventListener('seeked', res, { once: true }); });
+    ctx.drawImage(video, 0, 0);
+    frames.push(c.toDataURL('image/jpeg', 0.85));
+    setStatus(`Extrayendo frame ${i + 1} de ${total}…`, Math.round(10 + (i / total) * 85));
+  }
+  onFramesReady();
+}
+
+function onFramesReady() {
+  frameCount.textContent = frames.length;
+  renderThumbs(); renderSheet(); updateInfo(); startAnim();
+  setStatus(`✓ ${frames.length} frames listos.`);
+  $('btnPDF').disabled = false; $('btnSVG').disabled = false;
+}
+
+function renderThumbs() {
+  framesGrid.innerHTML = '';
+  frames.forEach((src, i) => {
+    const div = document.createElement('div');
+    div.className = 'frame-thumb' + (i === 0 ? ' active' : '');
+    div.onclick = () => { curIdx = i; drawFrame(i); updateActiveThumb(); };
+    const img = document.createElement('img'); img.src = src;
+    const num = document.createElement('div'); num.className = 'frame-num'; num.textContent = i + 1;
+    div.appendChild(img); div.appendChild(num); framesGrid.appendChild(div);
+  });
+}
+
+function updateActiveThumb() {
+  framesGrid.querySelectorAll('.frame-thumb').forEach((t, i) => t.classList.toggle('active', i === curIdx));
+  $('curFrame').textContent = curIdx + 1;
+}
+
+function startAnim() {
+  if (playInterval) clearInterval(playInterval);
+  playing = true; $('playBtn').textContent = '⏸ Pausa'; curIdx = 0;
+  playInterval = setInterval(() => {
+    if (!frames.length) return;
+    drawFrame(curIdx); updateActiveThumb();
+    curIdx = (curIdx + 1) % frames.length;
+  }, 125);
+}
+
+function togglePlay() {
+  if (playing) { clearInterval(playInterval); playing = false; $('playBtn').textContent = '▶ Play'; }
+  else startAnim();
+}
+
+function drawFrame(idx) {
+  if (!frames[idx]) return;
+  const img = new Image();
+  img.onload = () => {
+    animCtx.clearRect(0, 0, animCanvas.width, animCanvas.height);
+    const s = Math.min(animCanvas.width / img.width, animCanvas.height / img.height);
+    const dw = img.width * s, dh = img.height * s;
+    animCtx.drawImage(img, (animCanvas.width - dw) / 2, (animCanvas.height - dh) / 2, dw, dh);
+  };
+  img.src = frames[idx];
+}
+
+function getPaper() {
+  const p = paperSize.value;
+  if (p === 'a4') return { w: 2480, h: 3508 };
+  if (p === 'a5') return { w: 1748, h: 2480 };
+  return { w: 2550, h: 3300 };
+}
+
+function getGrid() {
+  return { 4:[2,2], 6:[2,3], 8:[2,4], 9:[3,3], 12:[3,4] }[parseInt(perSheet.value)] || [2,3];
+}
+
+// ─── IMPOSICIÓN STACK-CUT ────────────────────────────────────────────────────
+// La cuadrícula tiene N posiciones (= número de flipbooks por hoja).
+// Cada posición `pos` agrupa frames consecutivos a lo largo de todas las hojas:
+//   frame global = pos * totalSheets + sheetIndex
+//
+// Al imprimir las hojas en orden y cortar el taco entero de una vez,
+// cada pila resultante contiene los frames de UN flipbook ya en orden.
+// Solo hay que grapar o pegar cada pila → flipbook listo.
+// ─────────────────────────────────────────────────────────────────────────────
+function stackFrame(pos, sheetIdx, totalSheets) {
+  const i = pos * totalSheets + sheetIdx;
+  return i < frames.length ? frames[i] : null;
+}
+
+// Marcas de corte — canvas 2D
+function cutMarksCanvas(ctx, x, y, w, h, ml, gap) {
+  ctx.save(); ctx.strokeStyle = '#aaa'; ctx.lineWidth = 0.6; ctx.beginPath();
+  ctx.moveTo(x-gap-ml,y);   ctx.lineTo(x-gap,y);
+  ctx.moveTo(x,y-gap-ml);   ctx.lineTo(x,y-gap);
+  ctx.moveTo(x+w+gap,y);    ctx.lineTo(x+w+gap+ml,y);
+  ctx.moveTo(x+w,y-gap-ml); ctx.lineTo(x+w,y-gap);
+  ctx.moveTo(x-gap-ml,y+h); ctx.lineTo(x-gap,y+h);
+  ctx.moveTo(x,y+h+gap);    ctx.lineTo(x,y+h+gap+ml);
+  ctx.moveTo(x+w+gap,y+h);  ctx.lineTo(x+w+gap+ml,y+h);
+  ctx.moveTo(x+w,y+h+gap);  ctx.lineTo(x+w,y+h+gap+ml);
+  ctx.stroke(); ctx.restore();
+}
+
+// Marcas de corte — jsPDF
+function cutMarksPDF(doc, x, y, w, h, ml, gap) {
+  doc.setDrawColor(170); doc.setLineWidth(0.15);
+  doc.line(x-gap-ml,y,   x-gap,y);     doc.line(x,y-gap-ml,   x,y-gap);
+  doc.line(x+w+gap,y,    x+w+gap+ml,y);doc.line(x+w,y-gap-ml, x+w,y-gap);
+  doc.line(x-gap-ml,y+h, x-gap,y+h);   doc.line(x,y+h+gap,    x,y+h+gap+ml);
+  doc.line(x+w+gap,y+h,  x+w+gap+ml,y+h);doc.line(x+w,y+h+gap,x+w,y+h+gap+ml);
+}
+
+// Marcas de corte — SVG
+function cutMarksSVG(x, y, w, h, ml, gap) {
+  const d = [
+    `M${x-gap-ml},${y}H${x-gap}`,    `M${x},${y-gap-ml}V${y-gap}`,
+    `M${x+w+gap},${y}H${x+w+gap+ml}`,`M${x+w},${y-gap-ml}V${y-gap}`,
+    `M${x-gap-ml},${y+h}H${x-gap}`,  `M${x},${y+h+gap}V${y+h+gap+ml}`,
+    `M${x+w+gap},${y+h}H${x+w+gap+ml}`,`M${x+w},${y+h+gap}V${y+h+gap+ml}`,
+  ].join(' ');
+  return `<path d="${d}" stroke="#aaa" stroke-width="2" fill="none"/>`;
+}
+
+function renderSheet() {
+  if (!frames.length) return;
+  const n = parseInt(perSheet.value);
+  const [cols, rows] = getGrid();
+  const paper = getPaper();
+  const totalSheets = Math.ceil(frames.length / n);
+  totalPagesEl.textContent = totalSheets;
+
+  const scale = sheetCanvas.width / paper.w;
+  sheetCanvas.height = Math.round(paper.h * scale);
+  sheetCtx.fillStyle = '#fff';
+  sheetCtx.fillRect(0, 0, sheetCanvas.width, sheetCanvas.height);
+
+  // margen suficiente para que las marcas de corte no se recorten
+  const m = 22, ml = 7, gap = 2;
+  const cellW = (sheetCanvas.width  - m * (cols + 1)) / cols;
+  const cellH = (sheetCanvas.height - m * (rows + 1)) / rows;
+
+  for (let pos = 0; pos < n; pos++) {
+    const col = pos % cols, row = Math.floor(pos / cols);
+    const x = m + col * (cellW + m);
+    const y = m + row * (cellH + m);
+
+    sheetCtx.save(); sheetCtx.strokeStyle = '#d0cec8'; sheetCtx.lineWidth = 0.5;
+    sheetCtx.strokeRect(x, y, cellW, cellH); sheetCtx.restore();
+    cutMarksCanvas(sheetCtx, x, y, cellW, cellH, ml, gap);
+
+    // Preview muestra la hoja 0 (primera del taco)
+    const src = stackFrame(pos, 0, totalSheets);
+    if (!src) continue;
+    const img = new Image();
+    img.onload = () => {
+      sheetCtx.save();
+      const s = Math.min(cellW / img.width, cellH / img.height);
+      const dw = img.width * s, dh = img.height * s;
+      sheetCtx.drawImage(img, x + (cellW - dw) / 2, y + (cellH - dh) / 2, dw, dh);
+      // Etiqueta: primer frame de esta pila
+      sheetCtx.fillStyle = 'rgba(0,0,0,0.28)';
+      sheetCtx.font = `bold ${Math.round(cellH * 0.09)}px sans-serif`;
+      sheetCtx.fillText(pos * totalSheets + 1, x + 5, y + cellH - 5);
+      sheetCtx.restore();
+    };
+    img.src = src;
+  }
+}
+
+async function exportPDF() {
+  if (!frames.length) return;
+  const { jsPDF } = window.jspdf;
+  const n = parseInt(perSheet.value);
+  const [cols, rows] = getGrid();
+  const paperKey = paperSize.value;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: paperKey === 'letter' ? 'letter' : paperKey });
+  const pW = doc.internal.pageSize.getWidth();
+  const pH = doc.internal.pageSize.getHeight();
+
+  const m = 11, ml = 3, gap = 1; // mm
+  const cellW = (pW - m * (cols + 1)) / cols;
+  const cellH = (pH - m * (rows + 1)) / rows;
+  const totalSheets = Math.ceil(frames.length / n);
+
+  for (let sheet = 0; sheet < totalSheets; sheet++) {
+    if (sheet > 0) doc.addPage();
+    for (let pos = 0; pos < n; pos++) {
+      const col = pos % cols, row = Math.floor(pos / cols);
+      const x = m + col * (cellW + m);
+      const y = m + row * (cellH + m);
+
+      doc.setDrawColor(210); doc.setLineWidth(0.15);
+      doc.rect(x, y, cellW, cellH);
+      cutMarksPDF(doc, x, y, cellW, cellH, ml, gap);
+
+      const src = stackFrame(pos, sheet, totalSheets);
+      if (!src) continue;
+
+      await new Promise(res => {
+        const img = new Image();
+        img.onload = () => {
+          const ar = img.width / img.height;
+          let dw = cellW, dh = cellW / ar;
+          if (dh > cellH) { dh = cellH; dw = cellH * ar; }
+          doc.addImage(src, 'JPEG', x + (cellW - dw) / 2, y + (cellH - dh) / 2, dw, dh);
+          doc.setFontSize(6); doc.setTextColor(140);
+          doc.text(String(pos * totalSheets + sheet + 1), x + 1.5, y + cellH - 1.5);
+          res();
+        };
+        img.src = src;
+      });
+    }
+    setStatus(`Generando PDF… hoja ${sheet + 1} de ${totalSheets}`, Math.round(((sheet + 1) / totalSheets) * 100));
+  }
+
+  doc.save('flipbook.pdf');
+  setStatus(`✓ PDF listo — ${totalSheets} hoja${totalSheets > 1 ? 's' : ''}. Imprime, apila en orden, corta el taco → ${n} flipbooks listos.`);
+}
+
+function exportSVG() {
+  if (!frames.length) return;
+  const n = parseInt(perSheet.value);
+  const [cols, rows] = getGrid();
+  const paper = getPaper();
+  const W = paper.w, H = paper.h;
+  const m = 90, ml = 28, gap = 10;
+  const cellW = (W - m * (cols + 1)) / cols;
+  const cellH = (H - m * (rows + 1)) / rows;
+  const totalSheets = Math.ceil(frames.length / n);
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
+  svg += `<rect width="${W}" height="${H}" fill="white"/>`;
+
+  for (let pos = 0; pos < n; pos++) {
+    const col = pos % cols, row = Math.floor(pos / cols);
+    const x = m + col * (cellW + m);
+    const y = m + row * (cellH + m);
+    const src = stackFrame(pos, 0, totalSheets);
+    svg += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" fill="none" stroke="#ccc" stroke-width="2"/>`;
+    if (src) {
+      svg += `<image href="${src}" x="${x}" y="${y}" width="${cellW}" height="${cellH}" preserveAspectRatio="xMidYMid meet"/>`;
+      svg += `<text x="${x+12}" y="${y+cellH-16}" font-family="sans-serif" font-size="32" fill="rgba(0,0,0,0.28)">${pos * totalSheets + 1}</text>`;
+    }
+    svg += cutMarksSVG(x, y, cellW, cellH, ml, gap);
+  }
+  svg += `</svg>`;
+
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+  a.download = 'flipbook_hoja1.svg';
+  a.click();
+  setStatus('✓ SVG de la hoja 1 descargado (con marcas de corte).');
+}
+</script>
+</body>
+</html>
