@@ -11,6 +11,8 @@
   <meta name="author" content="flipbook.es">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://flipbook.es/">
+  <link rel="icon" type="image/svg+xml" href="flipbook-favicon.svg">
+  <link rel="apple-touch-icon" href="flipbook-favicon.svg">
 
   <!-- ═══ Open Graph (Facebook, WhatsApp, LinkedIn…) ══════════════════════ -->
   <meta property="og:type" content="website">
@@ -157,61 +159,78 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #f9f8f6; --surface: #ffffff; --surface2: #f2f1ee;
-      --border: #e2e0da; --border2: #ccc9c0;
-      --text: #1a1a18; --text2: #6b6a65; --text3: #a09f9a;
-      --accent: #1a1a18; --accent-fg: #ffffff;
+      --yellow: #FFD600; --yellow-dark: #F0C800; --yellow-pale: #FFFACC;
+      --black: #111111;
+      --bg: #F6F6F4; --surface: #ffffff; --surface2: #F0F0EC;
+      --border: #E0DED8; --border2: #C8C6BE;
+      --text: #111111; --text2: #5C5B56; --text3: #9C9B96;
       --radius: 10px; --radius-lg: 14px;
     }
-    body { font-family: 'Georgia', serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: baseline; gap: 12px; }
-    header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
-    header span { font-size: 13px; color: var(--text2); }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    header { background: var(--black); padding: 0 2rem; display: flex; align-items: center; gap: 14px; height: 58px; }
+    .logo-badge { background: var(--yellow); color: var(--black); font-family: 'Bebas Neue', Impact, sans-serif; font-size: 20px; letter-spacing: 0.05em; padding: 5px 10px 4px; border-radius: 4px; line-height: 1; }
+    .logo-name { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 22px; color: #fff; letter-spacing: 0.1em; }
+    header span { font-size: 12px; color: #666; margin-left: auto; }
     main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem 3rem; }
-    .dropzone { border: 2px dashed var(--border2); border-radius: var(--radius-lg); padding: 3rem 1rem; text-align: center; cursor: pointer; transition: background 0.2s, border-color 0.2s; background: var(--surface); margin-bottom: 1.5rem; }
-    .dropzone:hover, .dropzone.over { background: var(--surface2); border-color: var(--text2); }
+    .dropzone { border: 2px dashed var(--border2); border-radius: var(--radius-lg); padding: 2.5rem 1rem; text-align: center; cursor: pointer; transition: background 0.2s, border-color 0.2s; background: var(--surface); margin-bottom: 1.5rem; }
+    .dropzone:hover, .dropzone.over { background: var(--yellow-pale); border-color: var(--yellow-dark); }
     .dropzone-icon { font-size: 36px; margin-bottom: 10px; }
     .dropzone h2 { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
-    .dropzone p { font-size: 13px; color: var(--text2); font-family: sans-serif; }
-    .section-label { font-family: sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text2); margin-bottom: 10px; }
+    .dropzone p { font-size: 13px; color: var(--text2); }
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text2); margin-bottom: 10px; }
     .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
     .ctrl { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
-    .ctrl label { font-family: sans-serif; font-size: 12px; color: var(--text2); display: block; margin-bottom: 8px; }
-    .ctrl input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
-    .ctrl select { width: 100%; font-family: sans-serif; font-size: 14px; border: 1px solid var(--border2); border-radius: 6px; padding: 6px 8px; background: var(--bg); color: var(--text); cursor: pointer; }
-    .ctrl-val { font-size: 20px; font-weight: 700; margin-top: 4px; font-family: sans-serif; }
+    .ctrl label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 8px; }
+    .ctrl input[type=range] { width: 100%; accent-color: var(--black); cursor: pointer; }
+    .ctrl select { width: 100%; font-size: 14px; border: 1px solid var(--border2); border-radius: 6px; padding: 6px 8px; background: var(--bg); color: var(--text); cursor: pointer; }
+    .ctrl-val { font-size: 20px; font-weight: 700; margin-top: 4px; }
     .frames-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .frames-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; margin-bottom: 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; min-height: 110px; }
     .frame-thumb { aspect-ratio: 3/4; border-radius: 5px; border: 1.5px solid var(--border); overflow: hidden; position: relative; background: var(--surface2); cursor: pointer; transition: border-color 0.15s; }
-    .frame-thumb:hover { border-color: var(--border2); }
-    .frame-thumb.active { border-color: var(--text); }
+    .frame-thumb:hover { border-color: var(--yellow-dark); }
+    .frame-thumb.active { border-color: var(--black); border-width: 2px; }
+    .frame-thumb.cover-frame { border-color: var(--yellow); border-width: 2.5px; }
     .frame-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .frame-num { position: absolute; bottom: 2px; right: 4px; font-family: sans-serif; font-size: 9px; color: #fff; background: rgba(0,0,0,0.45); padding: 1px 3px; border-radius: 3px; }
-    .frames-empty { grid-column: 1/-1; display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-size: 13px; color: var(--text3); padding: 2rem; }
+    .frame-num { position: absolute; bottom: 2px; right: 4px; font-size: 9px; color: #fff; background: rgba(0,0,0,0.5); padding: 1px 3px; border-radius: 3px; }
+    .cover-badge { position: absolute; top: 3px; left: 3px; font-size: 8px; font-weight: 600; background: var(--yellow); color: var(--black); padding: 1px 4px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .frames-empty { grid-column: 1/-1; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text3); padding: 2rem; }
     .preview-area { display: grid; grid-template-columns: 140px 1fr; gap: 16px; margin-bottom: 1.5rem; align-items: start; }
     .anim-col { display: flex; flex-direction: column; gap: 8px; }
-    .anim-label { font-family: sans-serif; font-size: 12px; color: var(--text2); }
+    .anim-label { font-size: 12px; color: var(--text2); }
     .flip-preview { width: 140px; aspect-ratio: 3/4; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
     .flip-preview canvas { width: 100%; height: 100%; display: block; }
     .play-row { display: flex; align-items: center; gap: 8px; }
-    .btn-play { font-family: sans-serif; font-size: 13px; background: var(--surface); border: 1px solid var(--border2); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: background 0.15s; }
-    .btn-play:hover { background: var(--surface2); }
-    .frame-counter { font-family: sans-serif; font-size: 12px; color: var(--text3); }
+    .btn-play { font-size: 13px; background: var(--surface); border: 1px solid var(--border2); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: background 0.15s; }
+    .btn-play:hover { background: var(--yellow-pale); border-color: var(--yellow-dark); }
+    .frame-counter { font-size: 12px; color: var(--text3); }
     .sheet-col { display: flex; flex-direction: column; gap: 8px; }
-    .sheet-label { font-family: sans-serif; font-size: 12px; color: var(--text2); }
+    .sheet-label { font-size: 12px; color: var(--text2); }
     .sheet-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; display: flex; justify-content: center; }
     #sheet { max-width: 100%; border: 1px solid var(--border); border-radius: 3px; }
-    .info-box { font-family: sans-serif; font-size: 13px; color: #5a4a00; background: #fffbe6; border: 1px solid #d4c24a; border-radius: var(--radius); padding: 12px 16px; margin-bottom: 1rem; line-height: 1.6; display: none; }
-    .status-bar { font-family: sans-serif; font-size: 13px; color: var(--text2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 1.5rem; }
-    .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; display: none; }
-    .progress-fill { height: 100%; background: var(--text); transition: width 0.2s; border-radius: 2px; }
+    /* Cover upload zone */
+    .cover-zone { border: 2px dashed var(--border2); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s, border-color 0.2s; background: var(--surface); margin-bottom: 1.5rem; }
+    .cover-zone:hover { background: var(--yellow-pale); border-color: var(--yellow-dark); }
+    .cover-thumb { width: 42px; height: 56px; border-radius: 4px; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; display: none; }
+    .cover-thumb.visible { display: block; }
+    .cover-placeholder { width: 42px; height: 56px; border-radius: 4px; background: var(--yellow); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .cover-info { flex: 1; }
+    .cover-info strong { font-size: 13px; font-weight: 600; display: block; margin-bottom: 2px; }
+    .cover-info span { font-size: 12px; color: var(--text2); }
+    .cover-clear { font-size: 12px; color: var(--text3); border: none; background: none; cursor: pointer; padding: 4px 6px; border-radius: 4px; }
+    .cover-clear:hover { background: var(--surface2); color: var(--text); }
+    .info-box { font-size: 13px; color: #4a3a00; background: var(--yellow-pale); border: 1px solid var(--yellow-dark); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 1rem; line-height: 1.6; display: none; }
+    .status-bar { font-size: 13px; color: var(--text2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 1.5rem; }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; display: none; }
+    .progress-fill { height: 100%; background: var(--yellow); transition: width 0.2s; border-radius: 2px; }
     .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn-primary { background: var(--accent); color: var(--accent-fg); border: none; border-radius: var(--radius); padding: 11px 24px; font-family: sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.15s; }
-    .btn-primary:hover { opacity: 0.82; }
-    .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
-    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); padding: 11px 24px; font-family: sans-serif; font-size: 14px; cursor: pointer; transition: background 0.15s; }
+    .btn-primary { background: var(--yellow); color: var(--black); border: none; border-radius: var(--radius); padding: 11px 28px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s; letter-spacing: 0.01em; }
+    .btn-primary:hover { background: var(--yellow-dark); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); padding: 11px 24px; font-size: 14px; cursor: pointer; transition: background 0.15s; }
     .btn-secondary:hover { background: var(--surface2); }
     .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
     @media (max-width: 600px) {
@@ -222,8 +241,9 @@
 </head>
 <body>
 <header itemscope itemtype="https://schema.org/WPHeader">
-  <h1 itemprop="headline">flipbook.es</h1>
-  <span>Convierte GIFs y vídeos en libritos animados imprimibles</span>
+  <img src="flipbook-favicon.svg" alt="Flipbook.es" width="36" height="36" style="border-radius:6px;">
+  <span class="logo-name" itemprop="headline">FLIPBOOK.ES</span>
+  <span>Crea libritos animados para imprimir</span>
 </header>
 <main itemscope itemtype="https://schema.org/WebApplication" itemid="https://flipbook.es/#app">
   <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
@@ -232,6 +252,18 @@
     <p>GIF · MP4 · WebM · MOV — arrastra aquí o haz clic para seleccionar</p>
   </div>
   <input type="file" id="fileInput" accept=".gif,.mp4,.webm,.mov" style="display:none">
+  <input type="file" id="coverInput" accept="image/*" style="display:none">
+
+  <div class="section-label">Portada personalizada (opcional)</div>
+  <div class="cover-zone" id="coverZone" onclick="$('coverInput').click()">
+    <div class="cover-placeholder" id="coverPlaceholder">🎨</div>
+    <img class="cover-thumb" id="coverThumb" alt="Portada">
+    <div class="cover-info">
+      <strong>Añadir imagen de portada</strong>
+      <span>Se insertará como primer frame en cada flipbook · JPG, PNG, GIF</span>
+    </div>
+    <button class="cover-clear" id="coverClear" style="display:none" onclick="clearCover(event)">✕ Quitar</button>
+  </div>
 
   <div class="section-label">Configuración</div>
   <div class="controls">
@@ -298,6 +330,7 @@
 
 <script>
 let frames = [], playing = false, playInterval = null, curIdx = 0;
+let coverDataURL = null; // portada personalizada
 
 const $ = id => document.getElementById(id);
 const fpsRange    = $('fps');
@@ -323,6 +356,32 @@ dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
 dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('over'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
 $('fileInput').onchange = e => { if (e.target.files[0]) handleFile(e.target.files[0]); };
 
+$('coverInput').onchange = e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    coverDataURL = ev.target.result;
+    const thumb = $('coverThumb');
+    thumb.src = coverDataURL;
+    thumb.classList.add('visible');
+    $('coverPlaceholder').style.display = 'none';
+    $('coverClear').style.display = 'block';
+    if (frames.length) { renderSheet(); updateInfo(); }
+  };
+  reader.readAsDataURL(file);
+};
+
+function clearCover(e) {
+  e.stopPropagation();
+  coverDataURL = null;
+  $('coverThumb').classList.remove('visible');
+  $('coverPlaceholder').style.display = 'flex';
+  $('coverClear').style.display = 'none';
+  $('coverInput').value = '';
+  if (frames.length) { renderSheet(); updateInfo(); }
+}
+
 function setStatus(msg, pct) {
   const bar = $('progressBar');
   $('status').childNodes[0].textContent = msg;
@@ -335,11 +394,12 @@ function updateInfo() {
   const n = parseInt(perSheet.value);
   const groups = buildGroups(n);
   const totalSheets = totalSheetsFromGroups(groups);
+  const coverNote = coverDataURL ? ' La portada aparece como primer frame en cada pila.' : '';
   infoBox.style.display = 'block';
   infoBox.innerHTML =
     `✂️ <strong>Cómo cortar:</strong> Imprime las <strong>${totalSheets} hojas</strong> y apílalas en orden (hoja 1 arriba). ` +
     `Corta el taco entero de una vez por cada línea de separación. ` +
-    `Obtendrás <strong>${n} pilas</strong> — cada pila ya es un flipbook ordenado listo para grapar.`;
+    `Obtendrás <strong>${n} pilas</strong> — cada pila ya es un flipbook ordenado listo para grapar.${coverNote}`;
 }
 
 function handleFile(file) {
@@ -405,14 +465,33 @@ function onFramesReady() {
 
 function renderThumbs() {
   framesGrid.innerHTML = '';
+  // Si hay portada, mostrarla primero como miniatura especial
+  if (coverDataURL) {
+    const div = document.createElement('div');
+    div.className = 'frame-thumb cover-frame active';
+    div.onclick = () => { curIdx = -1; drawFrameSrc(coverDataURL); updateActiveThumb(); };
+    const img = document.createElement('img'); img.src = coverDataURL;
+    const badge = document.createElement('div'); badge.className = 'cover-badge'; badge.textContent = 'portada';
+    div.appendChild(img); div.appendChild(badge); framesGrid.appendChild(div);
+  }
   frames.forEach((src, i) => {
     const div = document.createElement('div');
-    div.className = 'frame-thumb' + (i === 0 ? ' active' : '');
+    div.className = 'frame-thumb' + (i === 0 && !coverDataURL ? ' active' : '');
     div.onclick = () => { curIdx = i; drawFrame(i); updateActiveThumb(); };
     const img = document.createElement('img'); img.src = src;
     const num = document.createElement('div'); num.className = 'frame-num'; num.textContent = i + 1;
     div.appendChild(img); div.appendChild(num); framesGrid.appendChild(div);
   });
+}
+
+function drawFrameSrc(src) {
+  const img = new Image();
+  img.onload = () => {
+    animCtx.clearRect(0, 0, animCanvas.width, animCanvas.height);
+    const s = Math.min(animCanvas.width / img.width, animCanvas.height / img.height);
+    animCtx.drawImage(img, (animCanvas.width - img.width*s)/2, (animCanvas.height - img.height*s)/2, img.width*s, img.height*s);
+  };
+  img.src = src;
 }
 
 function updateActiveThumb() {
@@ -469,14 +548,16 @@ function getGrid() {
 // Al apilar hoja0+hoja1+hoja2 y cortar el taco, cada pila = un flipbook.
 // ─────────────────────────────────────────────────────────────────────────────
 function buildGroups(n) {
-  const total = frames.length;
+  // Si hay portada, la anteponemos a cada grupo (primer frame de cada flipbook)
+  const src = coverDataURL ? [coverDataURL, ...frames] : frames;
+  const total = src.length;
   const base = Math.floor(total / n);
   const extra = total % n;
   const groups = [];
   let start = 0;
   for (let i = 0; i < n; i++) {
     const size = base + (i < extra ? 1 : 0);
-    groups.push(frames.slice(start, start + size));
+    groups.push(src.slice(start, start + size));
     start += size;
   }
   return groups;
