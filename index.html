@@ -233,9 +233,15 @@
     .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); padding: 11px 24px; font-size: 14px; cursor: pointer; transition: background 0.15s; }
     .btn-secondary:hover { background: var(--surface2); }
     .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
-    @media (max-width: 600px) {
+    /* Hero */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; background: var(--black); padding: 2.5rem 2rem; margin-bottom: 0; }
+    .hero-text h2 { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 32px; color: #fff; line-height: 1.15; letter-spacing: 0.03em; margin-bottom: 12px; }
+    .hero-text p { font-size: 14px; color: #aaa; line-height: 1.6; }
+    .hero-video { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: #000; }
+    .hero-video iframe { width: 100%; height: 100%; border: none; }
+    @media (max-width: 700px) {
+      .hero { grid-template-columns: 1fr; }
       .controls { grid-template-columns: 1fr 1fr; }
-      .preview-area { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -245,6 +251,16 @@
   <span class="logo-name" itemprop="headline">FLIPBOOK.ES</span>
   <span>Crea libritos animados para imprimir</span>
 </header>
+<section class="hero">
+  <div class="hero-text">
+    <h2>Convierte cualquier vídeo o GIF<br>en un librito animado imprimible</h2>
+    <p>Sube tu animación, elige el formato y descarga el PDF. Imprime, corta el taco y cada pila es un flipbook listo para grapar.</p>
+  </div>
+  <div class="hero-video">
+    <iframe src="https://www.youtube.com/embed/zPKbN1Gzjps?autoplay=1&mute=1&loop=1&playlist=zPKbN1Gzjps&controls=0&modestbranding=1&playsinline=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+</section>
+
 <main itemscope itemtype="https://schema.org/WebApplication" itemid="https://flipbook.es/#app">
   <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
     <div class="dropzone-icon">🎬</div>
@@ -292,24 +308,14 @@
     </div>
   </div>
 
-  <div class="frames-header">
-    <div class="section-label" style="margin-bottom:0">Frames extraídos (<span id="frameCount">0</span>)</div>
-  </div>
-  <div class="frames-grid" id="framesGrid">
-    <div class="frames-empty">Carga un GIF o vídeo para ver los frames aquí</div>
-  </div>
+  <!-- Hidden canvases still needed for rendering logic -->
+  <span id="frameCount" style="display:none">0</span>
+  <canvas id="animCanvas" width="140" height="187" style="display:none"></canvas>
+  <div id="framesGrid" style="display:none"></div>
 
-  <div class="section-label">Previsualización</div>
-  <div class="preview-area">
-    <div class="anim-col">
-      <div class="anim-label">Animación</div>
-      <div class="flip-preview"><canvas id="animCanvas" width="140" height="187"></canvas></div>
-      <div class="play-row">
-        <button class="btn-play" id="playBtn" onclick="togglePlay()">▶ Play</button>
-        <span class="frame-counter">frame <span id="curFrame">—</span></span>
-      </div>
-    </div>
-    <div class="sheet-col">
+  <div class="section-label">Previsualización de hoja</div>
+  <div style="display:flex; gap:16px; align-items:flex-start; margin-bottom:1.5rem; flex-wrap:wrap;">
+    <div class="sheet-col" style="flex:1; min-width:260px;">
       <div class="sheet-label">Hoja 1 de <span id="totalPages">—</span> — cada posición = un flipbook completo</div>
       <div class="sheet-wrap"><canvas id="sheet" width="380" height="537"></canvas></div>
     </div>
@@ -444,12 +450,28 @@ async function extractVideoFrames(video) {
   const total = Math.min(80, Math.max(8, Math.round(video.duration * fps)));
   const step = video.duration / total;
   frames = [];
+
+  const vw = video.videoWidth || 320;
+  const vh = video.videoHeight || 240;
+  const isVertical = vh > vw;
+
+  // Si el vídeo es vertical lo rotamos 90° para que quede horizontal
   const c = document.createElement('canvas');
-  c.width = video.videoWidth || 320; c.height = video.videoHeight || 240;
+  if (isVertical) { c.width = vh; c.height = vw; }
+  else            { c.width = vw; c.height = vh; }
   const ctx = c.getContext('2d');
+
   for (let i = 0; i < total; i++) {
     await new Promise(res => { video.currentTime = i * step; video.addEventListener('seeked', res, { once: true }); });
-    ctx.drawImage(video, 0, 0);
+    ctx.save();
+    if (isVertical) {
+      ctx.translate(c.width / 2, c.height / 2);
+      ctx.rotate(Math.PI / 2);
+      ctx.drawImage(video, -vw / 2, -vh / 2, vw, vh);
+    } else {
+      ctx.drawImage(video, 0, 0);
+    }
+    ctx.restore();
     frames.push(c.toDataURL('image/jpeg', 0.85));
     setStatus(`Extrayendo frame ${i + 1} de ${total}…`, Math.round(10 + (i / total) * 85));
   }
@@ -458,8 +480,8 @@ async function extractVideoFrames(video) {
 
 function onFramesReady() {
   frameCount.textContent = frames.length;
-  renderThumbs(); renderSheet(); updateInfo(); startAnim();
-  setStatus(`✓ ${frames.length} frames listos.`);
+  renderSheet(); updateInfo();
+  setStatus(`✓ ${frames.length} frames listos. Descarga el PDF cuando quieras.`);
   $('btnPDF').disabled = false;
 }
 
