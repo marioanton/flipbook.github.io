@@ -233,6 +233,25 @@
     .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); padding: 11px 24px; font-size: 14px; cursor: pointer; transition: background 0.15s; }
     .btn-secondary:hover { background: var(--surface2); }
     .btn-secondary:disabled { opacity: 0.3; cursor: not-allowed; }
+    /* Preview duo */
+    .preview-duo { display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; max-width: 420px; }
+    .anim-box { display: flex; flex-direction: column; gap: 10px; }
+    .anim-box-label { font-size: 12px; color: var(--text2); }
+    .anim-screen { background: var(--black); border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center; }
+    .anim-screen canvas { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .anim-controls { display: flex; align-items: center; gap: 8px; }
+    .anim-fps { font-size: 12px; color: var(--text3); white-space: nowrap; }
+    @media (max-width: 700px) {
+      .preview-duo { grid-template-columns: 1fr; }
+    }
+    /* Footer */
+    footer { background: var(--black); margin-top: 3rem; padding: 1.25rem 2rem; }
+    .footer-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-brand { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 16px; color: var(--yellow); letter-spacing: 0.1em; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+    .footer-links a { display: flex; align-items: center; gap: 7px; font-size: 13px; color: #aaa; text-decoration: none; transition: color 0.15s; }
+    .footer-links a:hover { color: var(--yellow); }
+    .footer-links svg { flex-shrink: 0; }
     /* Hero */
     .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; background: var(--black); padding: 2.5rem 2rem; margin-bottom: 0; }
     .hero-text h2 { font-family: 'Bebas Neue', Impact, sans-serif; font-size: 32px; color: #fff; line-height: 1.15; letter-spacing: 0.03em; margin-bottom: 12px; }
@@ -308,16 +327,29 @@
     </div>
   </div>
 
-  <!-- Hidden canvases still needed for rendering logic -->
+  <!-- Hidden helpers -->
   <span id="frameCount" style="display:none">0</span>
-  <canvas id="animCanvas" width="140" height="187" style="display:none"></canvas>
   <div id="framesGrid" style="display:none"></div>
 
-  <div class="section-label">Previsualización de hoja</div>
-  <div style="display:flex; gap:16px; align-items:flex-start; margin-bottom:1.5rem; flex-wrap:wrap;">
-    <div class="sheet-col" style="flex:1; min-width:260px;">
-      <div class="sheet-label">Hoja 1 de <span id="totalPages">—</span> — cada posición = un flipbook completo</div>
-      <div class="sheet-wrap"><canvas id="sheet" width="380" height="537"></canvas></div>
+  <!-- Preview: animación + hoja -->
+  <div id="previewSection" style="display:none; margin-bottom:1.5rem;">
+    <div class="section-label">Previsualización</div>
+    <div class="preview-duo">
+      <!-- Animación en bucle -->
+      <div class="anim-box">
+        <div class="anim-box-label">Animación</div>
+        <div class="anim-screen">
+          <canvas id="animCanvas" width="240" height="180"></canvas>
+        </div>
+        <div class="anim-controls">
+          <button class="btn-play" id="playBtn" onclick="togglePlay()">⏸ Pausa</button>
+          <input type="range" id="speedRange" min="1" max="24" value="8" step="1" style="flex:1;">
+          <span class="anim-fps"><span id="speedVal">8</span> fps</span>
+        </div>
+      </div>
+      <!-- sheet canvas hidden, still used for PDF generation -->
+      <canvas id="sheet" width="380" height="537" style="display:none"></canvas>
+      <span id="totalPages" style="display:none"></span>
     </div>
   </div>
 
@@ -353,6 +385,15 @@ const totalPagesEl = $('totalPages');
 const infoBox     = $('infoBox');
 
 fpsRange.oninput = () => { fpsVal.textContent = fpsRange.value; };
+
+// Speed control for animation preview
+document.addEventListener('DOMContentLoaded', () => {
+  const sr = $('speedRange');
+  if (sr) sr.oninput = () => {
+    $('speedVal').textContent = sr.value;
+    if (playing) startAnim();
+  };
+});
 perSheet.onchange = () => { renderSheet(); updateInfo(); };
 paperSize.onchange = renderSheet;
 
@@ -480,7 +521,8 @@ async function extractVideoFrames(video) {
 
 function onFramesReady() {
   frameCount.textContent = frames.length;
-  renderSheet(); updateInfo();
+  $('previewSection').style.display = 'block';
+  renderSheet(); updateInfo(); startAnim();
   setStatus(`✓ ${frames.length} frames listos. Descarga el PDF cuando quieras.`);
   $('btnPDF').disabled = false;
 }
@@ -557,6 +599,42 @@ function getPaper() {
 
 function getGrid() {
   return { 4:[2,2], 6:[2,3], 8:[2,4], 9:[3,3], 12:[3,4] }[parseInt(perSheet.value)] || [2,3];
+}
+
+function startAnim() {
+  if (playInterval) clearInterval(playInterval);
+  playing = true;
+  const btn = $('playBtn'); if (btn) btn.textContent = '⏸ Pausa';
+  curIdx = 0;
+  const sr = $('speedRange');
+  const fps = sr ? parseInt(sr.value) : 8;
+  playInterval = setInterval(() => {
+    if (!frames.length) return;
+    drawFrame(curIdx);
+    curIdx = (curIdx + 1) % frames.length;
+  }, Math.round(1000 / fps));
+}
+
+function togglePlay() {
+  if (playing) {
+    clearInterval(playInterval); playing = false;
+    const btn = $('playBtn'); if (btn) btn.textContent = '▶ Play';
+  } else { startAnim(); }
+}
+
+function drawFrame(idx) {
+  const canvas = $('animCanvas');
+  if (!canvas || !frames[idx]) return;
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.onload = () => {
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const s = Math.min(canvas.width / img.width, canvas.height / img.height);
+    const dw = img.width * s, dh = img.height * s;
+    ctx.drawImage(img, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh);
+  };
+  img.src = frames[idx];
 }
 
 // ─── IMPOSICIÓN STACK-CUT ────────────────────────────────────────────────────
@@ -733,5 +811,20 @@ async function exportPDF() {
 
 
 </script>
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">FLIPBOOK.ES</span>
+    <div class="footer-links">
+      <a href="mailto:contacto@marioanton.com">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+        contacto@marioanton.com
+      </a>
+      <a href="https://wa.me/34644565431" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.845L.057 23.571a.5.5 0 00.624.598l5.909-1.88A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.95 9.95 0 01-5.187-1.447l-.36-.215-3.733 1.187 1.224-3.643-.237-.374A9.95 9.95 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        +34 644 565 431
+      </a>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
