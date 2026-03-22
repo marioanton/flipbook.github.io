@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+
+  <!-- Fondo negro redondeado -->
+  <rect width="64" height="64" rx="12" fill="#111111"/>
+
+  <!-- Pila de páginas -->
+  <rect x="10" y="47" width="36" height="3" rx="1" fill="#bbb"/>
+  <rect x="9"  y="44" width="38" height="3" rx="1" fill="#ccc"/>
+  <rect x="8"  y="41" width="40" height="3" rx="1" fill="#ddd"/>
+
+  <!-- Lomo -->
+  <rect x="8" y="18" width="5" height="26" rx="1" fill="#222"/>
+  <rect x="9" y="19" width="1.5" height="24" rx="1" fill="#FFD600" opacity="0.8"/>
+
+  <!-- Página frontal amarilla -->
+  <rect x="13" y="18" width="34" height="26" rx="2" fill="#FFD600"/>
+
+  <!-- Mini grid 2x2 de frames en la página -->
+  <rect x="16" y="21" width="13" height="9" rx="1" fill="#111" opacity="0.15"/>
+  <rect x="31" y="21" width="13" height="9" rx="1" fill="#111" opacity="0.10"/>
+  <rect x="16" y="32" width="13" height="9" rx="1" fill="#111" opacity="0.10"/>
+  <rect x="31" y="32" width="13" height="9" rx="1" fill="#111" opacity="0.06"/>
+
+  <!-- Figura corriendo (frame principal) -->
+  <circle cx="22" cy="24" r="2" fill="#111"/>
+  <line x1="22" y1="26" x2="22" y2="30" stroke="#111" stroke-width="1.2"/>
+  <line x1="22" y1="27" x2="19" y2="29" stroke="#111" stroke-width="1.2"/>
+  <line x1="22" y1="27" x2="25" y2="28" stroke="#111" stroke-width="1.2"/>
+  <line x1="22" y1="30" x2="20" y2="33" stroke="#111" stroke-width="1.2"/>
+  <line x1="22" y1="30" x2="24" y2="32" stroke="#111" stroke-width="1.2"/>
+
+  <!-- Flecha pulgar -->
+  <path d="M 49 32 Q 55 26 52 20" fill="none" stroke="#FFD600" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 52 20 L 49 18 M 52 20 L 54 17" fill="none" stroke="#FFD600" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Letras FB -->
+  <text x="32" y="58" font-family="'Bebas Neue', Impact, sans-serif" font-size="10" fill="#FFD600" text-anchor="middle" letter-spacing="1">FB</text>
+
+</svg>

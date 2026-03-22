@@ -1,9 +1,160 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flipbook.es — Crea tu librito animado</title>
+
+  <!-- ═══ SEO primario ═══════════════════════════════════════════════════════ -->
+  <title>Flipbook.es — Crea libritos animados para imprimir desde GIF o vídeo</title>
+  <meta name="description" content="Convierte cualquier GIF o vídeo en un flipbook imprimible. Sube tu animación, elige el formato, descarga el PDF listo para imprimir y cortar. Gratis, sin registro, funciona en el navegador.">
+  <meta name="keywords" content="flipbook, librito animado, hacer flipbook, flipbook PDF, flipbook imprimible, crear flipbook, GIF a flipbook, vídeo a flipbook, flipbook online, flipbook gratis">
+  <meta name="author" content="flipbook.es">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://flipbook.es/">
+
+  <!-- ═══ Open Graph (Facebook, WhatsApp, LinkedIn…) ══════════════════════ -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://flipbook.es/">
+  <meta property="og:title" content="Flipbook.es — Crea libritos animados para imprimir">
+  <meta property="og:description" content="Convierte GIFs y vídeos en flipbooks imprimibles. PDF listo para cortar y montar. Gratis y sin registro.">
+  <meta property="og:image" content="https://flipbook.es/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Flipbook.es">
+
+  <!-- ═══ Twitter Card ════════════════════════════════════════════════════ -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@flipbookes">
+  <meta name="twitter:title" content="Flipbook.es — Crea libritos animados para imprimir">
+  <meta name="twitter:description" content="Convierte GIFs y vídeos en flipbooks imprimibles. PDF listo para cortar y montar. Gratis y sin registro.">
+  <meta name="twitter:image" content="https://flipbook.es/og-image.png">
+
+  <!-- ═══ JSON-LD — Structured Data ══════════════════════════════════════ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://flipbook.es/#app",
+        "name": "Flipbook.es",
+        "url": "https://flipbook.es/",
+        "description": "Herramienta gratuita para convertir GIFs y vídeos en flipbooks imprimibles en PDF. Imposición automática stack-cut: imprime, corta el taco y cada pila es un flipbook listo.",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR"
+        },
+        "inLanguage": "es",
+        "featureList": [
+          "Importar GIF",
+          "Importar vídeo MP4, WebM, MOV",
+          "Exportar PDF imprimible",
+          "Imposición stack-cut para corte en taco",
+          "Marcas de corte profesionales",
+          "Formatos A4, A5 y Carta"
+        ],
+        "publisher": {
+          "@type": "Organization",
+          "name": "Flipbook.es",
+          "url": "https://flipbook.es/"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://flipbook.es/#website",
+        "url": "https://flipbook.es/",
+        "name": "Flipbook.es",
+        "description": "Crea libritos animados para imprimir desde GIF o vídeo",
+        "inLanguage": "es",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://flipbook.es/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "HowTo",
+        "@id": "https://flipbook.es/#howto",
+        "name": "Cómo crear un flipbook imprimible",
+        "description": "Pasos para convertir un GIF o vídeo en un flipbook listo para imprimir y cortar.",
+        "totalTime": "PT2M",
+        "tool": {
+          "@type": "HowToTool",
+          "name": "Flipbook.es"
+        },
+        "step": [
+          {
+            "@type": "HowToStep",
+            "position": 1,
+            "name": "Sube tu animación",
+            "text": "Arrastra o selecciona un archivo GIF, MP4, WebM o MOV."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 2,
+            "name": "Configura el formato",
+            "text": "Elige los frames por segundo, cuántos flipbooks por hoja y el tamaño de papel."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 3,
+            "name": "Descarga el PDF",
+            "text": "Descarga el PDF con imposición stack-cut: los frames están distribuidos para que al cortar el taco cada pila sea un flipbook."
+          },
+          {
+            "@type": "HowToStep",
+            "position": 4,
+            "name": "Imprime, corta y monta",
+            "text": "Imprime las hojas en orden, apílalas y corta el taco de una vez. Cada pila resultante es un flipbook listo para grapar."
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://flipbook.es/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "¿Qué es un flipbook?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Un flipbook o librito animado es un taco de páginas con imágenes que, al pasarlas rápidamente con el pulgar, crean la ilusión de movimiento."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Qué formatos de vídeo acepta?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Flipbook.es acepta archivos GIF, MP4, WebM y MOV. Todo el procesamiento ocurre en tu navegador, sin subir nada a ningún servidor."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cómo funciona el corte en taco (stack-cut)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "El PDF usa una imposición especial: cada posición de la cuadrícula contiene frames consecutivos a lo largo de todas las hojas. Al imprimir las hojas en orden, apilarlas y cortar el taco de una sola vez, cada pila resultante ya contiene los frames de un flipbook en el orden correcto."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Es gratuito?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Sí, Flipbook.es es completamente gratuito y no requiere registro. Todo el procesamiento ocurre en tu propio navegador."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,11 +221,11 @@
   </style>
 </head>
 <body>
-<header>
-  <h1>flipbook.es</h1>
-  <span>Convierte GIFs y vídeos en libritos imprimibles</span>
+<header itemscope itemtype="https://schema.org/WPHeader">
+  <h1 itemprop="headline">flipbook.es</h1>
+  <span>Convierte GIFs y vídeos en libritos animados imprimibles</span>
 </header>
-<main>
+<main itemscope itemtype="https://schema.org/WebApplication" itemid="https://flipbook.es/#app">
   <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
     <div class="dropzone-icon">🎬</div>
     <h2>Sube un GIF o vídeo</h2>
@@ -141,7 +292,7 @@
 
   <div class="btn-row">
     <button class="btn-primary" id="btnPDF" onclick="exportPDF()" disabled>⬇ Descargar PDF</button>
-    <button class="btn-secondary" id="btnSVG" onclick="exportSVG()" disabled>⬇ Descargar SVG (hoja 1)</button>
+
   </div>
 </main>
 
@@ -182,7 +333,8 @@ function setStatus(msg, pct) {
 function updateInfo() {
   if (!frames.length) { infoBox.style.display = 'none'; return; }
   const n = parseInt(perSheet.value);
-  const totalSheets = Math.ceil(frames.length / n);
+  const groups = buildGroups(n);
+  const totalSheets = totalSheetsFromGroups(groups);
   infoBox.style.display = 'block';
   infoBox.innerHTML =
     `✂️ <strong>Cómo cortar:</strong> Imprime las <strong>${totalSheets} hojas</strong> y apílalas en orden (hoja 1 arriba). ` +
@@ -192,7 +344,7 @@ function updateInfo() {
 
 function handleFile(file) {
   frames = [];
-  $('btnPDF').disabled = true; $('btnSVG').disabled = true;
+  $('btnPDF').disabled = true;
   infoBox.style.display = 'none';
   const ext = file.name.split('.').pop().toLowerCase();
   if (ext === 'gif') loadGIF(file); else loadVideo(file);
@@ -248,7 +400,7 @@ function onFramesReady() {
   frameCount.textContent = frames.length;
   renderThumbs(); renderSheet(); updateInfo(); startAnim();
   setStatus(`✓ ${frames.length} frames listos.`);
-  $('btnPDF').disabled = false; $('btnSVG').disabled = false;
+  $('btnPDF').disabled = false;
 }
 
 function renderThumbs() {
@@ -307,17 +459,36 @@ function getGrid() {
 }
 
 // ─── IMPOSICIÓN STACK-CUT ────────────────────────────────────────────────────
-// La cuadrícula tiene N posiciones (= número de flipbooks por hoja).
-// Cada posición `pos` agrupa frames consecutivos a lo largo de todas las hojas:
-//   frame global = pos * totalSheets + sheetIndex
+// Dividimos los frames en N grupos consecutivos (uno por posición/flipbook).
+// La hoja `sheetIdx` contiene el frame `sheetIdx` de cada grupo.
 //
-// Al imprimir las hojas en orden y cortar el taco entero de una vez,
-// cada pila resultante contiene los frames de UN flipbook ya en orden.
-// Solo hay que grapar o pegar cada pila → flipbook listo.
+// Ejemplo: 24 frames, 8 posiciones → grupos de 3 frames → 3 hojas
+//   Posición 0: grupo [f0,f1,f2]  → hoja0:f0  hoja1:f1  hoja2:f2
+//   Posición 1: grupo [f3,f4,f5]  → hoja0:f3  hoja1:f4  hoja2:f5
+//   ...
+// Al apilar hoja0+hoja1+hoja2 y cortar el taco, cada pila = un flipbook.
 // ─────────────────────────────────────────────────────────────────────────────
-function stackFrame(pos, sheetIdx, totalSheets) {
-  const i = pos * totalSheets + sheetIdx;
-  return i < frames.length ? frames[i] : null;
+function buildGroups(n) {
+  const total = frames.length;
+  const base = Math.floor(total / n);
+  const extra = total % n;
+  const groups = [];
+  let start = 0;
+  for (let i = 0; i < n; i++) {
+    const size = base + (i < extra ? 1 : 0);
+    groups.push(frames.slice(start, start + size));
+    start += size;
+  }
+  return groups;
+}
+
+function stackFrame(pos, sheetIdx, groups) {
+  const g = groups[pos];
+  return g && sheetIdx < g.length ? g[sheetIdx] : null;
+}
+
+function totalSheetsFromGroups(groups) {
+  return Math.max(...groups.map(g => g.length));
 }
 
 // Marcas de corte — canvas 2D
@@ -343,23 +514,15 @@ function cutMarksPDF(doc, x, y, w, h, ml, gap) {
   doc.line(x+w+gap,y+h,  x+w+gap+ml,y+h);doc.line(x+w,y+h+gap,x+w,y+h+gap+ml);
 }
 
-// Marcas de corte — SVG
-function cutMarksSVG(x, y, w, h, ml, gap) {
-  const d = [
-    `M${x-gap-ml},${y}H${x-gap}`,    `M${x},${y-gap-ml}V${y-gap}`,
-    `M${x+w+gap},${y}H${x+w+gap+ml}`,`M${x+w},${y-gap-ml}V${y-gap}`,
-    `M${x-gap-ml},${y+h}H${x-gap}`,  `M${x},${y+h+gap}V${y+h+gap+ml}`,
-    `M${x+w+gap},${y+h}H${x+w+gap+ml}`,`M${x+w},${y+h+gap}V${y+h+gap+ml}`,
-  ].join(' ');
-  return `<path d="${d}" stroke="#aaa" stroke-width="2" fill="none"/>`;
-}
+
 
 function renderSheet() {
   if (!frames.length) return;
   const n = parseInt(perSheet.value);
   const [cols, rows] = getGrid();
   const paper = getPaper();
-  const totalSheets = Math.ceil(frames.length / n);
+  const groups = buildGroups(n);
+  const totalSheets = totalSheetsFromGroups(groups);
   totalPagesEl.textContent = totalSheets;
 
   const scale = sheetCanvas.width / paper.w;
@@ -367,7 +530,6 @@ function renderSheet() {
   sheetCtx.fillStyle = '#fff';
   sheetCtx.fillRect(0, 0, sheetCanvas.width, sheetCanvas.height);
 
-  // margen suficiente para que las marcas de corte no se recorten
   const m = 22, ml = 7, gap = 2;
   const cellW = (sheetCanvas.width  - m * (cols + 1)) / cols;
   const cellH = (sheetCanvas.height - m * (rows + 1)) / rows;
@@ -381,19 +543,28 @@ function renderSheet() {
     sheetCtx.strokeRect(x, y, cellW, cellH); sheetCtx.restore();
     cutMarksCanvas(sheetCtx, x, y, cellW, cellH, ml, gap);
 
-    // Preview muestra la hoja 0 (primera del taco)
-    const src = stackFrame(pos, 0, totalSheets);
+    // Preview: primer frame de este grupo (lo que aparece en la hoja 0)
+    const src = stackFrame(pos, 0, groups);
     if (!src) continue;
+
+    // Calcular índice global del primer frame de este grupo para la etiqueta
+    let globalStart = 0;
+    for (let k = 0; k < pos; k++) globalStart += groups[k].length;
+
     const img = new Image();
     img.onload = () => {
       sheetCtx.save();
       const s = Math.min(cellW / img.width, cellH / img.height);
       const dw = img.width * s, dh = img.height * s;
       sheetCtx.drawImage(img, x + (cellW - dw) / 2, y + (cellH - dh) / 2, dw, dh);
-      // Etiqueta: primer frame de esta pila
-      sheetCtx.fillStyle = 'rgba(0,0,0,0.28)';
-      sheetCtx.font = `bold ${Math.round(cellH * 0.09)}px sans-serif`;
-      sheetCtx.fillText(pos * totalSheets + 1, x + 5, y + cellH - 5);
+      // Etiqueta: rango de frames de esta pila
+      const groupSize = groups[pos].length;
+      const label = groupSize > 1
+        ? `${globalStart + 1}–${globalStart + groupSize}`
+        : `${globalStart + 1}`;
+      sheetCtx.fillStyle = 'rgba(0,0,0,0.32)';
+      sheetCtx.font = `bold ${Math.round(cellH * 0.08)}px sans-serif`;
+      sheetCtx.fillText(label, x + 5, y + cellH - 5);
       sheetCtx.restore();
     };
     img.src = src;
@@ -410,10 +581,12 @@ async function exportPDF() {
   const pW = doc.internal.pageSize.getWidth();
   const pH = doc.internal.pageSize.getHeight();
 
-  const m = 11, ml = 3, gap = 1; // mm
+  const m = 11, ml = 3, gap = 1;
   const cellW = (pW - m * (cols + 1)) / cols;
   const cellH = (pH - m * (rows + 1)) / rows;
-  const totalSheets = Math.ceil(frames.length / n);
+
+  const groups = buildGroups(n);
+  const totalSheets = totalSheetsFromGroups(groups);
 
   for (let sheet = 0; sheet < totalSheets; sheet++) {
     if (sheet > 0) doc.addPage();
@@ -426,8 +599,13 @@ async function exportPDF() {
       doc.rect(x, y, cellW, cellH);
       cutMarksPDF(doc, x, y, cellW, cellH, ml, gap);
 
-      const src = stackFrame(pos, sheet, totalSheets);
+      const src = stackFrame(pos, sheet, groups);
       if (!src) continue;
+
+      // Número de frame global para esta celda
+      let globalStart = 0;
+      for (let k = 0; k < pos; k++) globalStart += groups[k].length;
+      const frameNum = globalStart + sheet + 1;
 
       await new Promise(res => {
         const img = new Image();
@@ -437,7 +615,7 @@ async function exportPDF() {
           if (dh > cellH) { dh = cellH; dw = cellH * ar; }
           doc.addImage(src, 'JPEG', x + (cellW - dw) / 2, y + (cellH - dh) / 2, dw, dh);
           doc.setFontSize(6); doc.setTextColor(140);
-          doc.text(String(pos * totalSheets + sheet + 1), x + 1.5, y + cellH - 1.5);
+          doc.text(String(frameNum), x + 1.5, y + cellH - 1.5);
           res();
         };
         img.src = src;
@@ -450,40 +628,7 @@ async function exportPDF() {
   setStatus(`✓ PDF listo — ${totalSheets} hoja${totalSheets > 1 ? 's' : ''}. Imprime, apila en orden, corta el taco → ${n} flipbooks listos.`);
 }
 
-function exportSVG() {
-  if (!frames.length) return;
-  const n = parseInt(perSheet.value);
-  const [cols, rows] = getGrid();
-  const paper = getPaper();
-  const W = paper.w, H = paper.h;
-  const m = 90, ml = 28, gap = 10;
-  const cellW = (W - m * (cols + 1)) / cols;
-  const cellH = (H - m * (rows + 1)) / rows;
-  const totalSheets = Math.ceil(frames.length / n);
 
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">`;
-  svg += `<rect width="${W}" height="${H}" fill="white"/>`;
-
-  for (let pos = 0; pos < n; pos++) {
-    const col = pos % cols, row = Math.floor(pos / cols);
-    const x = m + col * (cellW + m);
-    const y = m + row * (cellH + m);
-    const src = stackFrame(pos, 0, totalSheets);
-    svg += `<rect x="${x}" y="${y}" width="${cellW}" height="${cellH}" fill="none" stroke="#ccc" stroke-width="2"/>`;
-    if (src) {
-      svg += `<image href="${src}" x="${x}" y="${y}" width="${cellW}" height="${cellH}" preserveAspectRatio="xMidYMid meet"/>`;
-      svg += `<text x="${x+12}" y="${y+cellH-16}" font-family="sans-serif" font-size="32" fill="rgba(0,0,0,0.28)">${pos * totalSheets + 1}</text>`;
-    }
-    svg += cutMarksSVG(x, y, cellW, cellH, ml, gap);
-  }
-  svg += `</svg>`;
-
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
-  a.download = 'flipbook_hoja1.svg';
-  a.click();
-  setStatus('✓ SVG de la hoja 1 descargado (con marcas de corte).');
-}
 </script>
 </body>
 </html>

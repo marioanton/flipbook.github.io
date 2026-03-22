@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 280" width="680" height="280">
+
+  <!-- Fondo -->
+  <rect x="100" y="20" width="480" height="240" rx="14" fill="#111111"/>
+
+  <!-- Páginas de fondo (efecto pila) -->
+  <rect x="148" y="185" width="160" height="4" rx="1" fill="#bbb"/>
+  <rect x="147" y="181" width="162" height="4" rx="1" fill="#ccc"/>
+  <rect x="146" y="177" width="164" height="4" rx="1" fill="#ddd"/>
+  <rect x="145" y="173" width="166" height="4" rx="1" fill="#e8e8e8"/>
+
+  <!-- Páginas interiores -->
+  <rect x="148" y="90" width="160" height="96" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+  <line x1="308" y1="90" x2="308" y2="186" stroke="#ddd" stroke-width="1"/>
+  <line x1="305" y1="91" x2="305" y2="185" stroke="#e0e0e0" stroke-width="0.8"/>
+  <line x1="302" y1="92" x2="302" y2="184" stroke="#e4e4e4" stroke-width="0.7"/>
+
+  <!-- Página frontal -->
+  <rect x="148" y="90" width="160" height="96" rx="3" fill="#ffffff" stroke="#ccc" stroke-width="0.8"/>
+
+  <!-- Grid fila 1 — frames amarillos -->
+  <rect x="154" y="95" width="34" height="25" rx="1" fill="#FFD600"/>
+  <rect x="192" y="95" width="34" height="25" rx="1" fill="#f5c800"/>
+  <rect x="230" y="95" width="34" height="25" rx="1" fill="#FFD600"/>
+  <rect x="268" y="95" width="34" height="25" rx="1" fill="#f5c800"/>
+
+  <!-- Figura frame 1 -->
+  <circle cx="171" cy="101" r="3" fill="#111"/>
+  <line x1="171" y1="104" x2="171" y2="112" stroke="#111" stroke-width="1.5"/>
+  <line x1="171" y1="107" x2="166" y2="111" stroke="#111" stroke-width="1.5"/>
+  <line x1="171" y1="107" x2="176" y2="110" stroke="#111" stroke-width="1.5"/>
+  <line x1="171" y1="112" x2="168" y2="118" stroke="#111" stroke-width="1.5"/>
+  <line x1="171" y1="112" x2="175" y2="116" stroke="#111" stroke-width="1.5"/>
+  <!-- Figura frame 2 -->
+  <circle cx="209" cy="101" r="3" fill="#111"/>
+  <line x1="209" y1="104" x2="210" y2="112" stroke="#111" stroke-width="1.5"/>
+  <line x1="209" y1="107" x2="204" y2="109" stroke="#111" stroke-width="1.5"/>
+  <line x1="209" y1="107" x2="215" y2="111" stroke="#111" stroke-width="1.5"/>
+  <line x1="210" y1="112" x2="206" y2="118" stroke="#111" stroke-width="1.5"/>
+  <line x1="210" y1="112" x2="214" y2="117" stroke="#111" stroke-width="1.5"/>
+  <!-- Figura frame 3 -->
+  <circle cx="247" cy="101" r="3" fill="#111"/>
+  <line x1="247" y1="104" x2="248" y2="112" stroke="#111" stroke-width="1.5"/>
+  <line x1="247" y1="107" x2="242" y2="110" stroke="#111" stroke-width="1.5"/>
+  <line x1="247" y1="107" x2="253" y2="108" stroke="#111" stroke-width="1.5"/>
+  <line x1="248" y1="112" x2="244" y2="118" stroke="#111" stroke-width="1.5"/>
+  <line x1="248" y1="112" x2="252" y2="119" stroke="#111" stroke-width="1.5"/>
+  <!-- Figura frame 4 -->
+  <circle cx="285" cy="101" r="3" fill="#111"/>
+  <line x1="285" y1="104" x2="284" y2="112" stroke="#111" stroke-width="1.5"/>
+  <line x1="285" y1="107" x2="279" y2="109" stroke="#111" stroke-width="1.5"/>
+  <line x1="285" y1="107" x2="290" y2="110" stroke="#111" stroke-width="1.5"/>
+  <line x1="284" y1="112" x2="280" y2="119" stroke="#111" stroke-width="1.5"/>
+  <line x1="284" y1="112" x2="288" y2="118" stroke="#111" stroke-width="1.5"/>
+
+  <!-- Grid fila 2 — frames grises -->
+  <rect x="154" y="124" width="34" height="25" rx="1" fill="#f0f0f0"/>
+  <rect x="192" y="124" width="34" height="25" rx="1" fill="#f0f0f0"/>
+  <rect x="230" y="124" width="34" height="25" rx="1" fill="#f0f0f0"/>
+  <rect x="268" y="124" width="34" height="25" rx="1" fill="#f0f0f0"/>
+  <circle cx="171" cy="130" r="3" fill="#555"/>
+  <line x1="171" y1="133" x2="170" y2="141" stroke="#555" stroke-width="1.5"/>
+  <line x1="171" y1="136" x2="165" y2="138" stroke="#555" stroke-width="1.5"/>
+  <line x1="171" y1="136" x2="177" y2="139" stroke="#555" stroke-width="1.5"/>
+  <line x1="170" y1="141" x2="167" y2="147" stroke="#555" stroke-width="1.5"/>
+  <line x1="170" y1="141" x2="174" y2="146" stroke="#555" stroke-width="1.5"/>
+  <circle cx="209" cy="130" r="3" fill="#555"/>
+  <line x1="209" y1="133" x2="210" y2="141" stroke="#555" stroke-width="1.5"/>
+  <line x1="209" y1="136" x2="203" y2="140" stroke="#555" stroke-width="1.5"/>
+  <line x1="209" y1="136" x2="215" y2="137" stroke="#555" stroke-width="1.5"/>
+  <line x1="210" y1="141" x2="206" y2="147" stroke="#555" stroke-width="1.5"/>
+  <line x1="210" y1="141" x2="213" y2="147" stroke="#555" stroke-width="1.5"/>
+  <circle cx="247" cy="130" r="3" fill="#555"/>
+  <line x1="247" y1="133" x2="246" y2="141" stroke="#555" stroke-width="1.5"/>
+  <line x1="247" y1="136" x2="241" y2="137" stroke="#555" stroke-width="1.5"/>
+  <line x1="247" y1="136" x2="252" y2="140" stroke="#555" stroke-width="1.5"/>
+  <line x1="246" y1="141" x2="242" y2="147" stroke="#555" stroke-width="1.5"/>
+  <line x1="246" y1="141" x2="250" y2="148" stroke="#555" stroke-width="1.5"/>
+  <circle cx="285" cy="130" r="3" fill="#555"/>
+  <line x1="285" y1="133" x2="284" y2="141" stroke="#555" stroke-width="1.5"/>
+  <line x1="285" y1="136" x2="279" y2="138" stroke="#555" stroke-width="1.5"/>
+  <line x1="285" y1="136" x2="291" y2="137" stroke="#555" stroke-width="1.5"/>
+  <line x1="284" y1="141" x2="280" y2="148" stroke="#555" stroke-width="1.5"/>
+  <line x1="284" y1="141" x2="288" y2="147" stroke="#555" stroke-width="1.5"/>
+
+  <!-- Grid fila 3 -->
+  <rect x="154" y="153" width="34" height="25" rx="1" fill="#e8e8e8"/>
+  <rect x="192" y="153" width="34" height="25" rx="1" fill="#e8e8e8"/>
+  <rect x="230" y="153" width="34" height="25" rx="1" fill="#e8e8e8"/>
+  <rect x="268" y="153" width="34" height="25" rx="1" fill="#e8e8e8"/>
+
+  <!-- Lomo -->
+  <rect x="144" y="90" width="8" height="96" rx="2" fill="#222"/>
+  <rect x="145" y="92" width="2" height="92" rx="1" fill="#FFD600" opacity="0.7"/>
+
+  <!-- Flecha pulgar -->
+  <path d="M 314 140 Q 326 128 322 115 Q 318 108 312 112" fill="none" stroke="#FFD600" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M 312 112 L 308 108 M 312 112 L 316 107" fill="none" stroke="#FFD600" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Wordmark -->
+  <text x="345" y="132" font-family="'Bebas Neue', Impact, 'Arial Narrow', sans-serif" font-size="58" font-weight="700" fill="#ffffff" letter-spacing="2">FLIP</text>
+  <text x="345" y="185" font-family="'Bebas Neue', Impact, 'Arial Narrow', sans-serif" font-size="58" font-weight="700" fill="#FFD600" letter-spacing="2">BOOK</text>
+
+  <!-- Puntos decorativos -->
+  <circle cx="348" cy="198" r="4" fill="#FFD600"/>
+  <circle cx="360" cy="198" r="4" fill="#FFD600"/>
+  <circle cx="372" cy="198" r="4" fill="#FFD600"/>
+
+  <!-- Tagline -->
+  <text x="345" y="218" font-family="'Inter', Arial, sans-serif" font-size="12" fill="#888" letter-spacing="3">ES — LIBRITOS ANIMADOS</text>
+
+</svg>
